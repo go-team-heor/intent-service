@@ -1,0 +1,19 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: DigitalOcean Docker Image Publish
+    # You may pin to the exact commit or the version.
+    # uses: ripplr-io/docr-docker-publish@44fac8d6ff7c3ece58c9ffe50f370514d166f5b7
+      uses: ripplr-io/docr-docker-publish@v1
+      with:
+        # Image path in the format registry-name/image-name
+        image_path: go-team-heor/heor-intent-service
