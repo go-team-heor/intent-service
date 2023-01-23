@@ -1,0 +1,26 @@
+# entities
+# --------
+---
+type: entity
+name: command
+automatically_extensible: yes
+use_synonyms: yes
+values: 
+  - [ pause, quiet, hush, shush, silence, shut up ]
+#   - [nyc, new york, new york city]
+#   - london
+#   - [malmö, malmo]
+#   - helsinki
+#   - miami, fl
+#   - paris france
+#   - los angeles, california
+
+# pause intent
+---
+type: intent
+name: pause
+utterances:
+  - heor pause
+  - be quiet heor
+  - heor, please shush
+  - shut up heor

@@ -1,0 +1,13 @@
+version: '3.9'
+services:
+  intents:
+    build: .
+    environment:
+      - CORPUS_FILE=data/dataset.json
+    ports:
+     - "8080:8080"
+    command: gunicorn --bind 0.0.0.0:8080 --reload --chdir live-src wsgi:app
+    volumes:
+     - ./src:/home/gunicorn/live-src
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t

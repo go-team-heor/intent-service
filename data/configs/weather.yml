@@ -1,0 +1,26 @@
+# entities
+# --------
+---
+type: entity
+name: location
+values: 
+  - brooklyn
+  - [nyc, new york, new york city]
+  - london
+  - [malmö, malmo]
+  - helsinki
+  - miami, fl
+  - paris france
+  - los angeles, california
+
+# getWeather intent
+---
+type: intent
+name: getWeather
+slots:
+  - name: location
+    entity: location
+utterances:
+  - what's the weather like in [location:location](Brooklyn)
+  - weather [location:location](helsinki)
+  - "[location:location](springfield, il) weather"
