@@ -31,6 +31,8 @@ RUN python -m snips_nlu download-language-entities en
 
 # Python application dependencies 
 FROM base as setup
+RUN adduser gunicorn --shell /bin/bash
+USER gunicorn
 WORKDIR /home/gunicorn
 COPY --chown=gunicorn:gunicorn requirements.txt requirements.txt
 COPY --chown=gunicorn:gunicorn src/ src/
@@ -38,7 +40,6 @@ RUN pip install -r requirements.txt
 
 # Update the training dataset
 FROM setup as training
-RUN adduser gunicorn --shell /bin/bash
 USER gunicorn
 WORKDIR /home/gunicorn
 
