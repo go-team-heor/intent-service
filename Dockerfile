@@ -50,7 +50,7 @@ RUN snips-nlu generate-dataset en data/dataset.yml > data/dataset.json
 
 # Run stage
 FROM training
-USER root
+USER gunicorn
 WORKDIR /home/gunicorn
 COPY --from=setup /home/gunicorn/src/ /home/gunicorn/src
 COPY --from=training /home/gunicorn/data /home/gunicorn/data 
