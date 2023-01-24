@@ -54,6 +54,7 @@ USER root
 WORKDIR /home/gunicorn
 COPY --from=setup /home/gunicorn/src/ /home/gunicorn/src
 COPY --from=training /home/gunicorn/data /home/gunicorn/data 
+RUN true
 COPY start-prod.sh /home/gunicorn/start-prod.sh
 ENV PATH=${PATH}:/home/gunicorn/.local/bin
 ENTRYPOINT [ "/bin/bash" ]
