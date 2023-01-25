@@ -4,6 +4,8 @@ import os
 import io
 import json
 import string
+import logging
+import sys
 from snips_nlu import SnipsNLUEngine             
 from snips_nlu.default_configs import CONFIG_EN  
 import spacy
@@ -13,28 +15,59 @@ from langdetect import detect
 from flask import Flask
 from flask import request
 
-app = Flask(__name__)
-app.config['DEBUG'] = True
+VERSION = os.getenv("VERSION", "0.1")
+ENVIRONMENT = os.getenv('ENVIRONMENT', "production")
+DEBUG = os.getenv('DEBUG', False)
+CORPUS_FILE = os.getenv('CORPUS_FILE', "../data/dataset.json")
 
-CORPUS_FILE = os.getenv('CORPUS_FILE', default="")
-with io.open("../data/dataset.json", encoding='utf-8') as f:
+# Setup Logger
+# ------------
+log_level = logging.DEBUG if DEBUG else logging.INFO
+logging.basicConfig(level=log_level, stream=sys.stdout)
+logger = logging.getLogger()
+
+logger.info(f'HEOR Intent Service v{VERSION}')
+
+# Setup Snips
+# -----------
+logger.info(f'Loading Snips NLU engine with model at {CORPUS_FILE}')
+with io.open(CORPUS_FILE, encoding='utf-8') as f:
     corpus = json.load(f)
-
 nlu_engine = SnipsNLUEngine(config=CONFIG_EN)
 nlu_engine.fit(corpus)
 
+# Setup Spacy
+# -----------
+logger.info(f'Loading SpaCy NLP engine')
 nlp = spacy.load("en_core_web_sm")
 nlp.add_pipe('sentencizer')
 nlp.add_pipe('asent_en_v1')
 nlp.add_pipe("concepcy")
+logger.debug(f'Loaded SpaCy pipelines: {nlp.pipe_names}')
 
-print(nlp.pipe_names)
+logger.info('Engines loaded! LFG!')
+
+# Setup Flask
+# -----------
+app = Flask(__name__)
+app.config['DEBUG'] = DEBUG
 
 def analyze_text(text):
     return nlp(text)
 
 def parse_intents(text):
     text = text.translate(str.maketrans('', '', string.punctuation))
+    intents = nlu_engine.parse(text)
+    
+    try:
+        intentName = intents.get('intent').get('intentName')
+        if intentName == None:
+            logger.warning(f'Unable to determine intent, evaluate for training. TEXT: {text}')
+    except AttributeError:
+        logger.error(f'Invalid or corrupt intent received')
+
+    # if intents.intentName == None:
+        # logger.warning(f'No intents found for string {text}')
     return nlu_engine.parse(text)
 
 @app.route("/api/intents")
@@ -60,3 +93,4 @@ def get_analysis():
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
+
