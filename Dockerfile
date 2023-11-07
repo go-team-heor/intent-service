@@ -4,9 +4,6 @@ RUN apt-get update -y \
   && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 FROM base as build
-# RUN adduser gunicorn --shell /bin/bash
-# USER gunicorn
-# WORKDIR /home/gunicorn
 WORKDIR /app
 ARG BUILD_DATE
 ARG VCS_REF
@@ -37,21 +34,14 @@ RUN python -m snips_nlu download-language-entities en
 
 # Python application dependencies 
 FROM build as dependencies
-# USER gunicorn
-# WORKDIR /home/gunicorn
 WORKDIR /app
-# COPY --chown=gunicorn:gunicorn requirements.txt requirements.txt
 COPY requirements.txt requirements.txt
 RUN pip install --no-warn-script-location -r requirements.txt
 
 # Update the training dataset
 FROM dependencies as training
-# USER gunicorn
-# WORKDIR /home/gunicorn
 WORKDIR /app
-ENV PATH=${PATH}:/app/gunicorn/.local/bin
 RUN rm -rf data/
-# COPY --chown=gunicorn:gunicorn data/ data/
 COPY data/ data/
 RUN cat data/configs/*.yml > data/dataset.yml
 RUN snips-nlu generate-dataset en data/dataset.yml > data/dataset.json
@@ -64,9 +54,10 @@ COPY src/ src/
 COPY --from=training /app/data /app/data 
 COPY start-prod.sh /app/start-prod.sh
 RUN chmod 777 /app/start-prod.sh
+COPY start-dev.sh /app/start-dev.sh
+RUN chmod 777 /app/start-dev.sh
 # COPY start-dev.sh /app/start-dev.sh
-ENV PATH=${PATH}:/app/.local/bin:/usr/local/bin
+ENV PATH=${PATH}:/usr/local/bin
+ARG PORT
+EXPOSE ${PORT}
 ENTRYPOINT [ "/bin/bash" ]
-EXPOSE 80
-# ENTRYPOINT [ "/bin/bash gunicorn --bind 0.0.0.0:80 --chdir src wsgi:app" ]
-# CMD [ "./start-prod.sh" ]

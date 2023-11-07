@@ -18,6 +18,7 @@ from flask import request
 VERSION = os.getenv("VERSION", "0.1")
 ENVIRONMENT = os.getenv('ENVIRONMENT', "production")
 DEBUG = os.getenv('DEBUG', False)
+PORT = os.getenv('PORT', 8080)
 CORPUS_FILE = os.getenv('CORPUS_FILE', "../data/dataset.json")
 
 # Setup Logger
@@ -92,5 +93,5 @@ def get_analysis():
         }
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', port=PORT)
 
