@@ -70,12 +70,12 @@ def parse_intents(text):
         # logger.warning(f'No intents found for string {text}')
     return nlu_engine.parse(text)
 
-@app.route("/api/intents")
+@app.route("/intents")
 def get_intents():
     text = request.args.get("text")
     return parse_intents(text)
 
-@app.route("/api/analysis")
+@app.route("/analysis")
 def get_analysis():
     text = request.args.get("text")
     intents = parse_intents(text)
