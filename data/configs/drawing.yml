@@ -1,0 +1,21 @@
+# entities
+# --------
+---
+type: entity
+name: subject
+values: 
+  - small cat
+  - yourself
+  - four robots dancing
+
+# getWeather intent
+---
+type: intent
+name: getDrawing
+slots:
+  - name: subject
+    entity: subject
+utterances:
+  - draw a picture of [subject:subject](yourself)
+  - draw a [subject:subject](small cat)
+  - make a drawing of [subject:subject](four robots dancing)
