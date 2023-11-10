@@ -7,6 +7,7 @@ values:
   - small cat
   - yourself
   - four robots dancing
+  - daisy the pitbull
 
 # getWeather intent
 ---
@@ -19,3 +20,5 @@ utterances:
   - draw a picture of [subject:subject](yourself)
   - draw a [subject:subject](small cat)
   - make a drawing of [subject:subject](four robots dancing)
+  - heor please draw me a picture of [subject:subject](daisy the pitbull)
+  - heor draw a picture of daisy the [subject:subject](daisy the pitbull)
