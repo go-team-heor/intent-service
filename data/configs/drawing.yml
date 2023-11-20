@@ -22,3 +22,4 @@ utterances:
   - make a drawing of [subject:subject](four robots dancing)
   - heor please draw me a picture of [subject:subject](daisy the pitbull)
   - heor draw a picture of daisy the [subject:subject](daisy the pitbull)
+  - please draw a picture of yourself [subject:subject](yourself)
